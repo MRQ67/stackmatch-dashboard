@@ -44,13 +44,32 @@ export default function Header({ currentPageName }: HeaderProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const fetchAndSetUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
       setLoading(false);
+    };
+
+    // Fetch user on initial component mount
+    fetchAndSetUser();
+
+    // Set up a listener for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // When the user signs in or their data is updated, fetch the latest user data
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        fetchAndSetUser();
+      } 
+      // When the user signs out, clear the user data
+      else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
     });
 
-    return () => subscription.unsubscribe();
-  }, []);
+    // Cleanup the subscription when the component unmounts
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -117,9 +136,7 @@ export default function Header({ currentPageName }: HeaderProps) {
         </NavigationMenu>
 
         <div className="flex items-center gap-4 justify-self-end">
-          {loading ? (
-            <div className="w-10 h-10 rounded-full bg-muted animate-pulse" /> // Placeholder for loading state
-          ) : user ? (
+          {loading ? null : user ? (
             // User is signed in
             <>
               {pathname === '/' ? (
@@ -152,8 +169,8 @@ export default function Header({ currentPageName }: HeaderProps) {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar>
-                      <AvatarImage src={user.user_metadata?.avatar_url || "https://github.com/shadcn.png"} alt={user.email || "User Avatar"} />
-                      <AvatarFallback>{user.email ? user.email[0].toUpperCase() : "CN"}</AvatarFallback>
+                      <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || "User Avatar"} />
+                      <AvatarFallback>{user.email ? user.email[0].toUpperCase() : "U"}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>

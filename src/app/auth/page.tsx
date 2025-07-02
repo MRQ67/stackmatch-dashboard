@@ -51,8 +51,10 @@ export default function AuthPage() {
       addToast(error.message, 'error')
     } else {
       addToast(isSignUp ? 'Check your email for the confirmation link!' : 'Signed in successfully!', 'success')
-      if (!isSignUp) {
-        router.push('/dashboard')
+      if (isSignUp) {
+        router.push('/auth/complete-profile');
+      } else {
+        router.push('/dashboard');
       }
     }
     setLoading(false)

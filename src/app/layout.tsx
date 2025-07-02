@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // Import Inter
+import { Inter } from "next/font/google";
+import NextTopLoader from 'nextjs-toploader';
 import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter", // Define a CSS variable for Inter
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -21,8 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} font-sans antialiased`} // Use Inter variable and font-sans
+        className={`${inter.variable} font-sans antialiased`}
       >
+        <NextTopLoader showSpinner={false} />
         <ToastProvider>
           {children}
         </ToastProvider>
