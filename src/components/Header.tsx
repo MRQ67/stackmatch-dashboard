@@ -83,94 +83,94 @@ export default function Header({ currentPageName }: HeaderProps) {
     { name: 'About Us', href: '/about-us' },
   ];
 
-  const dashboardPaths = [
-    '/dashboard',
-    '/environments',
-    '/scanner',
-    '/compare',
-    '/public-environments',
-    '/popular-environments',
-    '/profile',
-    '/users',
-    '/analytics',
-    '/settings',
+  const publicNavPaths = [
+    '/',
+    '/docs',
+    '/cli',
+    '/about-us',
   ];
 
-  const showCentralNav = !dashboardPaths.some(path => pathname.startsWith(path));
+  const showCentralNav = publicNavPaths.includes(pathname);
 
   return (
     <header className="flex flex-col bg-card border-b border-border">
       {/* Top Navigation Bar */}
-      <div className="grid grid-cols-3 items-center px-4 sm:px-6 py-3">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-            {/* Placeholder for a logo */}
-            <div className="w-6 h-6 bg-primary rounded-sm" />
-            <span>StackMatch</span>
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 py-3">
+        <div className="flex items-center gap-4 justify-self-start">
+          <Link
+            href="/"
+            legacyBehavior>
+            <a className="flex items-center gap-2 text-lg font-semibold">
+              {/* Placeholder for a logo */}
+              <div className="w-6 h-6 bg-primary rounded-sm" />
+              <span>StackMatch</span>
+            </a>
           </Link>
           <span className="text-lg font-medium text-gray-700">/</span>
           <span className="text-lg font-medium text-muted-foreground">{currentPageName}</span>
         </div>
 
         {/* Centered Navigation Items (conditionally rendered) */}
-        <NavigationMenu className={cn(
-          "hidden md:flex transition-opacity duration-300 justify-self-center",
-          showCentralNav ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}>
-          <NavigationMenuList className="space-x-4">
-            {navItems.map((item) => (
-              <NavigationMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
-                  <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      pathname === item.href ? "text-primary" : "text-muted-foreground"
-                    )}
-                  >
-                    {item.name}
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
+        {showCentralNav && (
+          <NavigationMenu className="hidden md:flex transition-opacity duration-300 justify-self-center">
+            <NavigationMenuList className="space-x-4">
+              {navItems.map((item) => (
+                <NavigationMenuItem key={item.href}>
+                  <Link href={item.href} legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        pathname === item.href ? "text-primary" : "text-muted-foreground"
+                      )}
+                    >
+                      {item.name}
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
 
         <div className="flex items-center gap-4 justify-self-end">
           {loading ? null : user ? (
             // User is signed in
-            <>
+            (<>
               {pathname === '/' ? (
-                <Link href="/dashboard">
+                <Link href="/dashboard" legacyBehavior>
                   <Button>Go to Dashboard</Button>
                 </Link>
               ) : pathname === '/cli' ? (
-                <Link href="https://github.com/MRQ67/stackmatch-cli/releases/latest" passHref>
+                <Link
+                  href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
+                  passHref
+                  legacyBehavior>
                   <Button size="sm">
                     <Download className="mr-2 h-4 w-4" /> Download CLI
                   </Button>
                 </Link>
               ) : pathname === '/about-us' ? (
-                <Link href="mailto:contact@example.com">
+                <Link href="mailto:contact@example.com" legacyBehavior>
                   <Button size="sm">
                     <Mail className="mr-2 h-4 w-4" /> Contact Us
                   </Button>
                 </Link>
               ) : pathname.startsWith('/profile') ? (
                 // No search bar on profile page when signed in
-                null
+                (null)
               ) : (
                 // Search bar on other pages when signed in
-                <div className="relative w-64">
+                (<div className="relative w-64">
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Type / to search" className="pl-8" />
-                </div>
+                </div>)
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar>
-                      <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || "User Avatar"} />
-                      <AvatarFallback>{user.email ? user.email[0].toUpperCase() : "U"}</AvatarFallback>
+                      <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || "User Avatar"} />
+                      <AvatarFallback>{user?.email ? user.email[0].toUpperCase() : "U"}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -200,33 +200,33 @@ export default function Header({ currentPageName }: HeaderProps) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </>
+            </>)
           ) : (
             // User is not signed in
-            pathname === '/' ? (
-              <AuthButton />
-            ) : pathname === '/cli' ? (
-              <Link href="https://github.com/MRQ67/stackmatch-cli/releases/latest" passHref>
+            (pathname === '/' ? (<AuthButton />) : pathname === '/cli' ? (
+              <Link
+                href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
+                asChild>
                 <Button size="sm">
                   <Download className="mr-2 h-4 w-4" /> Download CLI
                 </Button>
               </Link>
             ) : pathname === '/about-us' ? (
-              <Link href="mailto:contact@example.com">
+              <Link href="mailto:contact@example.com" legacyBehavior>
                 <Button size="sm">
                   <Mail className="mr-2 h-4 w-4" /> Contact Us
                 </Button>
               </Link>
             ) : (
               // Search bar on other pages when not signed in
-              <div className="relative w-64">
+              (<div className="relative w-64">
                 <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input placeholder="Type / to search" className="pl-8" />
-              </div>
-            )
+              </div>)
+            ))
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }

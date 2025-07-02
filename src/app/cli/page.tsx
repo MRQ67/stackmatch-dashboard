@@ -12,7 +12,10 @@ export default function CliPage() {
           The StackMatch CLI tool allows you to manage and interact with your development environments directly from your terminal.
           It provides powerful functionalities for scanning, comparing, and editing environment configurations.
         </p>
-        <Link href="https://github.com/MRQ67/stackmatch-cli/releases/latest" passHref>
+        <Link
+          href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
+          passHref
+          legacyBehavior>
           <Button size="lg" className="mb-12">
             <Download className="mr-2 h-4 w-4" /> Download Latest Release
           </Button>

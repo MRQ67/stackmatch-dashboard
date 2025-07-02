@@ -13,10 +13,10 @@ export default function HomePage() {
           Manage and compare your development environments with ease.
         </p>
         <div className="flex gap-4">
-          <Link href="/auth?signup=true">
+          <Link href="/auth?signup=true" legacyBehavior>
             <Button size="lg">Get Started</Button>
           </Link>
-          <Link href="/auth">
+          <Link href="/auth" legacyBehavior>
             <Button size="lg" className="bg-white text-gray-800 border border-gray-300        │
  │           hover:bg-gray-100">Sign In</Button>
           </Link>

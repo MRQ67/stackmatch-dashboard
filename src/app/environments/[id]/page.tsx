@@ -154,7 +154,7 @@ export default function EnvironmentDetailPage() {
           >
             {cloning ? 'Cloning...' : 'Clone Environment'}
           </Button>
-          <Link href={`/environments/${environment.id}/edit`}>
+          <Link href={`/environments/${environment.id}/edit`} legacyBehavior>
             <Button>
               Edit Environment
             </Button>
@@ -200,5 +200,5 @@ export default function EnvironmentDetailPage() {
         )}
       </div>
     </DashboardLayout>
-  )
+  );
 }

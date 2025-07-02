@@ -125,7 +125,10 @@ export default function EnvironmentList() {
           <Card key={env.id} className="flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-medium">
-                <Link href={`/environments/${env.id}`} className="hover:underline">
+                <Link
+                  href={`/environments/${env.id}`}
+                  className="hover:underline"
+                  legacyBehavior>
                   {env.name}
                 </Link>
               </CardTitle>

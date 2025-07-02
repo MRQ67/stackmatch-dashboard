@@ -406,7 +406,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <DashboardCard title="Scan New Environment">
               <p className="text-foreground mb-4">Upload a new environment JSON file to add it to your collection.</p>
-              <Link href={`/${userId}/dashboard?tab=scanner`}>
+              <Link href={`/${userId}/dashboard?tab=scanner`} legacyBehavior>
                 <Button>
                   Go to Scanner
                 </Button>
@@ -414,7 +414,7 @@ export default function DashboardPage() {
             </DashboardCard>
             <DashboardCard title="Browse Public Environments">
               <p className="text-foreground mb-4">Discover and explore environments shared by the community.</p>
-              <Link href={`/${userId}/dashboard?tab=public-environments`}>
+              <Link href={`/${userId}/dashboard?tab=public-environments`} legacyBehavior>
                 <Button>
                   Browse Public
                 </Button>
@@ -433,7 +433,10 @@ export default function DashboardPage() {
                 <ul className="list-disc pl-5">
                   {recentEnvironments.map((env) => (
                     <li key={env.id} className="mb-2">
-                      <Link href={`/environments/${env.id}`} className="text-primary hover:underline">
+                      <Link
+                        href={`/environments/${env.id}`}
+                        className="text-primary hover:underline"
+                        legacyBehavior>
                         {env.name}
                       </Link>
                       <span className="text-sm text-muted-foreground ml-2">({new Date(env.updated_at).toLocaleString()})</span>
