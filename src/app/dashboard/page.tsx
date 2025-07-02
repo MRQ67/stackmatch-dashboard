@@ -24,7 +24,7 @@ export default function DashboardRedirectPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <p>Redirecting to your dashboard...</p>
+      <p>Redirecting to your dashboard... <span className="animate-spin">⚙️</span></p>
     </div>
   )
 }

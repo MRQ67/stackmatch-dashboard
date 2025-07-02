@@ -93,140 +93,173 @@ export default function Header({ currentPageName }: HeaderProps) {
   const showCentralNav = publicNavPaths.includes(pathname);
 
   return (
-    <header className="flex flex-col bg-card border-b border-border">
+    <header className="flex flex-col bg-card border-b border-border h-16">
       {/* Top Navigation Bar */}
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6 py-3">
-        <div className="flex items-center gap-4 justify-self-start">
+      <div className="relative flex items-center h-full px-4 sm:px-6">
+        {/* Left side - Logo and Page Name */}
+        <div className="flex items-center gap-4">
           <Link
             href="/"
-            legacyBehavior>
-            <a className="flex items-center gap-2 text-lg font-semibold">
-              {/* Placeholder for a logo */}
-              <div className="w-6 h-6 bg-primary rounded-sm" />
-              <span>StackMatch</span>
-            </a>
+            className="flex items-center gap-2 text-lg font-semibold">
+            <div className="w-6 h-6 bg-primary rounded-sm" />
+            <span>StackMatch</span>
           </Link>
           <span className="text-lg font-medium text-gray-700">/</span>
           <span className="text-lg font-medium text-muted-foreground">{currentPageName}</span>
         </div>
-
-        {/* Centered Navigation Items (conditionally rendered) */}
+      
+        {/* Centered Navigation - Only on public pages */}
         {showCentralNav && (
-          <NavigationMenu className="hidden md:flex transition-opacity duration-300 justify-self-center">
-            <NavigationMenuList className="space-x-4">
-              {navItems.map((item) => (
-                <NavigationMenuItem key={item.href}>
-                  <Link href={item.href} legacyBehavior passHref>
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <NavigationMenu className="hidden md:block">
+              <NavigationMenuList className="space-x-4">
+                {navItems.map((item) => (
+                  <NavigationMenuItem key={item.href}>
                     <NavigationMenuLink
+                      asChild
                       className={cn(
                         navigationMenuTriggerStyle(),
                         pathname === item.href ? "text-primary" : "text-muted-foreground"
                       )}
                     >
-                      {item.name}
+                      <Link href={item.href}>
+                        {item.name}
+                      </Link>
                     </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
         )}
 
-        <div className="flex items-center gap-4 justify-self-end">
-          {loading ? null : user ? (
-            // User is signed in
-            (<>
-              {pathname === '/' ? (
-                <Link href="/dashboard" legacyBehavior>
-                  <Button>Go to Dashboard</Button>
-                </Link>
-              ) : pathname === '/cli' ? (
-                <Link
-                  href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
-                  passHref
-                  legacyBehavior>
+        {/* Right side - Dynamic Content */}
+        <div className={`flex items-center gap-4 ml-auto ${loading ? 'invisible' : 'visible'}`}>
+            <>
+              {/* Docs Page - Only Search */}
+              {pathname === '/docs' && (
+                <div className="relative">
+                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search documentation..." className="pl-8 w-64" />
+                </div>
+              )}
+
+              {/* Home Page */}
+              {pathname === '/' && (user ? (
+                <div className="flex items-center gap-4">
+                  <Link href="/dashboard">
+                    <Button variant="outline">
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                        <Avatar>
+                          <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || "User Avatar"} />
+                          <AvatarFallback>{user?.email ? user.email[0].toUpperCase() : "U"}</AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">{user.email}</p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            {user.user_metadata?.full_name || "User"}
+                          </p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile" className="w-full">Profile</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/settings" className="w-full">Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <div className="p-2">
+                        <ThemeToggle />
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleSignOut}>
+                        Sign Out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ) : (
+                <AuthButton />
+              ))}
+
+              {/* CLI Page */}
+              {pathname === '/cli' && (
+                <Link href="https://github.com/MRQ67/stackmatch-cli/releases/latest" target="_blank" rel="noopener noreferrer">
                   <Button size="sm">
                     <Download className="mr-2 h-4 w-4" /> Download CLI
                   </Button>
                 </Link>
-              ) : pathname === '/about-us' ? (
-                <Link href="mailto:contact@example.com" legacyBehavior>
+              )}
+
+              {/* About Us Page */}
+              {pathname === '/about-us' && (
+                <Link href="mailto:contact@example.com">
                   <Button size="sm">
                     <Mail className="mr-2 h-4 w-4" /> Contact Us
                   </Button>
                 </Link>
-              ) : pathname.startsWith('/profile') ? (
-                // No search bar on profile page when signed in
-                (null)
-              ) : (
-                // Search bar on other pages when signed in
-                (<div className="relative w-64">
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Type / to search" className="pl-8" />
-                </div>)
               )}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <Avatar>
-                      <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || "User Avatar"} />
-                      <AvatarFallback>{user?.email ? user.email[0].toUpperCase() : "U"}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.email}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.user_metadata?.full_name || "User"}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/settings">Settings</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <div className="p-2">
-                    <ThemeToggle />
+
+              {/* Dashboard/Other Pages */}
+              {!['/', '/docs', '/cli', '/about-us'].includes(pathname) && (
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search..." className="pl-8 w-64" />
                   </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>)
-          ) : (
-            // User is not signed in
-            (pathname === '/' ? (<AuthButton />) : pathname === '/cli' ? (
-              <Link
-                href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
-                asChild>
-                <Button size="sm">
-                  <Download className="mr-2 h-4 w-4" /> Download CLI
-                </Button>
-              </Link>
-            ) : pathname === '/about-us' ? (
-              <Link href="mailto:contact@example.com" legacyBehavior>
-                <Button size="sm">
-                  <Mail className="mr-2 h-4 w-4" /> Contact Us
-                </Button>
-              </Link>
-            ) : (
-              // Search bar on other pages when not signed in
-              (<div className="relative w-64">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Type / to search" className="pl-8" />
-              </div>)
-            ))
-          )}
+                  {user && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                          <Avatar>
+                            <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || "User Avatar"} />
+                            <AvatarFallback>{user?.email ? user.email[0].toUpperCase() : "U"}</AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-56">
+                        <DropdownMenuLabel className="font-normal">
+                          <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">{user.email}</p>
+                            <p className="text-xs leading-none text-muted-foreground">
+                              {user.user_metadata?.full_name || "User"}
+                            </p>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href="/profile">Profile</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/settings">Settings</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <div className="p-2">
+                          <ThemeToggle />
+                        </div>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleSignOut}>
+                          Sign Out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
+              )}
+            </>
+          
         </div>
-      </div>
+    </div>
     </header>
   );
 }
