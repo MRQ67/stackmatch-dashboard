@@ -36,22 +36,22 @@ const commands = [
 
 const features = [
   {
-    icon: <Terminal className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />,
+    icon: <Terminal className="h-6 w-6 text-indigo-600 dark:text-primary" />,
     title: "Terminal First",
     description: "Designed for developers who live in the terminal with intuitive commands and flags."
   },
   {
-    icon: <Code className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />,
+    icon: <Code className="h-6 w-6 text-indigo-600 dark:text-primary" />,
     title: "Multiple Formats",
     description: "Support for JSON, YAML, and TOML configurations with easy conversion between them."
   },
   {
-    icon: <Cpu className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />,
+    icon: <Cpu className="h-6 w-6 text-indigo-600 dark:text-primary" />,
     title: "Fast & Efficient",
     description: "Optimized for performance with minimal dependencies and fast execution."
   },
   {
-    icon: <Shield className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />,
+    icon: <Shield className="h-6 w-6 text-indigo-600 dark:text-primary" />,
     title: "Secure",
     description: "Built with security in mind, with support for environment variable encryption."
   }
@@ -67,8 +67,8 @@ const CodeBlock = ({ code, language = 'bash' }: { code: string; language?: strin
   };
 
   return (
-    <div className="relative bg-gray-800 rounded-md overflow-hidden">
-      <div className="flex justify-between items-center bg-gray-700 px-4 py-2">
+    <div className="mt-4 relative bg-zinc-900 rounded-md overflow-hidden">
+      <div className="flex justify-between items-center bg-zinc-800 px-4 py-2">
         <span className="text-xs text-gray-300">{language}</span>
         <button
           onClick={copyToClipboard}
@@ -93,8 +93,8 @@ export default function CliPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-indigo-100 dark:bg-indigo-900 rounded-full mb-6">
-            <Terminal className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-black dark:bg-zinc-700 rounded-full mb-6">
+            <Terminal className="h-10 w-10 text-indigo-600 dark:text-primary" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl mb-4">
             StackMatch CLI
@@ -115,7 +115,7 @@ export default function CliPage() {
               href="https://github.com/MRQ67/stackmatch-cli"
               passHref
               legacyBehavior>
-              <Button size="lg" variant="outline" className="text-base">
+              <Button size="lg" variant="outline" className="text-base dark:bg-zinc-700 dark:hover:bg-zinc-600">
                 <GitBranch className="mr-2 h-5 w-5" /> View on GitHub
               </Button>
             </Link>
@@ -131,7 +131,7 @@ export default function CliPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab
-                    ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400'
+                    ? 'border-primary text-primary dark:text-primary dark:border-primary'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -145,23 +145,23 @@ export default function CliPage() {
         <div className="mb-16">
           {activeTab === 'installation' && (
             <div className="space-y-8">
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+              <div className="bg-white dark:bg-zinc-700 shadow rounded-lg p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Installation</h2>
                 
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">Using npm</h3>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mt-6 mb-3">Using npm</h3>
                 <CodeBlock code="npm install -g @stackmatch/cli" />
                 
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">Using Homebrew (macOS/Linux)</h3>
-                <CodeBlock code="brew tap stackmatch/cli
-brew install stackmatch" />
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mt-6 mb-3">Using Homebrew (macOS/Linux)</h3>
+                <CodeBlock code={`brew tap stackmatch/cli 
+brew install stackmatch`} />
                 
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">Using curl (Linux/macOS)</h3>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mt-6 mb-3">Using curl (Linux/macOS)</h3>
                 <CodeBlock code="curl -sSL https://get.stackmatch.dev | sh" />
                 
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">Using PowerShell (Windows)</h3>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mt-6 mb-3">Using PowerShell (Windows)</h3>
                 <CodeBlock code="iwr -useb https://get.stackmatch.dev/install.ps1 | iex" />
                 
-                <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-md">
+                <div className="mt-8 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md">
                   <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">Note for Windows Users</h4>
                   <p className="text-sm text-blue-700 dark:text-blue-300">
                     On Windows, you might need to run PowerShell as Administrator and set the execution policy to allow script execution:
@@ -170,8 +170,8 @@ brew install stackmatch" />
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Verify Installation</h3>
+              <div className="bg-white dark:bg-zinc-700 shadow rounded-lg p-6">
+                <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4">Verify Installation</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   After installation, verify that the CLI is working by running:
                 </p>
@@ -198,9 +198,9 @@ brew install stackmatch" />
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Start by creating a new environment configuration:
                 </p>
-                <CodeBlock code="mkdir my-project
+                <CodeBlock code={`mkdir my-project
 cd my-project
-stackmatch init" />
+stackmatch init `}/>
                 
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3">Scan Your Environment</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -212,8 +212,8 @@ stackmatch init" />
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Log in and sync your environment with the cloud:
                 </p>
-                <CodeBlock code="stackmatch login
-stackmatch sync" />
+                <CodeBlock code={`stackmatch login
+stackmatch pull `}/>
               </div>
             </div>
           )}
@@ -264,35 +264,35 @@ stackmatch sync" />
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Common Examples</h2>
                 
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">Initialize a New Project</h3>
-                <CodeBlock code="# Create a new project directory
+                <CodeBlock code={`# Create a new project directory
 mkdir my-awesome-app
 cd my-awesome-app
 
 # Initialize with a specific template
-stackmatch init --name my-awesome-app --template node" />
+stackmatch init --name my-awesome-app --template node`} />
                 
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3">Scan and Export</h3>
-                <CodeBlock code="# Scan current directory and export to JSON
+                <CodeBlock code={`# Scan current directory and export to JSON 
 stackmatch scan --output environments.json
 
 # Scan with verbose output
 stackmatch scan -v
 
 # Scan and format output as YAML
-stackmatch scan --format yaml" />
+stackmatch scan --format yaml`}/>
                 
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3">Compare Environments</h3>
-                <CodeBlock code="# Compare two environment files
+                <CodeBlock code={`# Compare two environment files
 stackmatch compare dev.env prod.env
 
 # Generate HTML report
 stackmatch compare dev.env prod.env --output report.html
 
 # Compare with specific format
-stackmatch compare dev.env prod.env --format markdown" />
+stackmatch compare dev.env prod.env --format markdown`}/>
                 
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-3">Sync with Cloud</h3>
-                <CodeBlock code="# Log in to your account
+                <CodeBlock code={`# Log in to your account
 stackmatch login
 
 # Sync current environment
@@ -302,7 +302,7 @@ stackmatch sync
 stackmatch sync --env production
 
 # Force sync (overwrite remote)
-stackmatch sync --force" />
+stackmatch sync --force`} />
               </div>
             </div>
           )}
@@ -313,8 +313,8 @@ stackmatch sync --force" />
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Why Use StackMatch CLI?</h2>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-4">
+              <div key={index} className="bg-white dark:bg-zinc-700 p-6 rounded-lg shadow">
+                <div className="w-12 h-12 bg-zinc-700 dark:bg-zinc-600 rounded-full flex items-center justify-center mb-4">
                   {feature.icon}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
@@ -325,11 +325,11 @@ stackmatch sync --force" />
         </div>
 
         {/* CTA */}
-        <div className="bg-indigo-700 rounded-2xl p-8 md:p-12 text-center">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
+        <div className="bg-primary rounded-2xl p-8 md:p-12 text-center">
+          <h2 className="text-3xl font-bold text-zinc-800 sm:text-4xl mb-4">
             Ready to Supercharge Your Workflow?
           </h2>
-          <p className="text-xl text-indigo-100 max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-zinc-700 max-w-2xl mx-auto mb-8">
             Download the StackMatch CLI today and take control of your development environments.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -337,7 +337,7 @@ stackmatch sync --force" />
               href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
               passHref
               legacyBehavior>
-              <Button size="lg" className="bg-white text-indigo-700 hover:bg-indigo-50">
+              <Button size="lg" className="bg-white text-zinc-600 hover:bg-indigo-50">
                 <Download className="mr-2 h-5 w-5" /> Download Now
               </Button>
             </Link>
@@ -345,7 +345,7 @@ stackmatch sync --force" />
               href="https://github.com/MRQ67/stackmatch-cli"
               passHref
               legacyBehavior>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-indigo-600">
+              <Button size="lg" variant="outline" className="text-white dark:border-zinc-700 hover:bg-indigo-600">
                 <GitBranch className="mr-2 h-5 w-5" /> View on GitHub
               </Button>
             </Link>

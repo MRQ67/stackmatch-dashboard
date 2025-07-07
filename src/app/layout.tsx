@@ -20,13 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark h-full">
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${inter.variable} font-sans antialiased flex flex-col min-h-full`}
       >
         <NextTopLoader showSpinner={false} />
         <ToastProvider>
-          {children}
+          <div className="flex flex-col min-h-screen">
+            {children}
+          </div>
         </ToastProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Code, GitBranch, Shield, BarChart, Zap, Users, Terminal } from 'lucide-react';
 import DashboardLayout from "@/components/DashboardLayout";
+import Footer from "@/components/Footer";
 import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
@@ -41,7 +42,7 @@ export default function HomePage() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Hero Section */}
         <div className="text-center py-20">
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
@@ -77,14 +78,14 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
-              <div key={index} className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-indigo-600 dark:text-indigo-400">
+              <div key={index} className="p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-indigo-600 dark:text-primary">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-gray-600 dark:text-gray-300">
+                <p className="mt-2 text-gray-600 dark:text-white">
                   {feature.description}
                 </p>
               </div>
@@ -93,22 +94,23 @@ export default function HomePage() {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-indigo-700 rounded-2xl p-8 md:p-12 my-16 text-center">
+        <div className="bg-zinc-800 rounded-2xl p-8 md:p-12 my-16 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Ready to optimize your workflow?
           </h2>
-          <p className="mt-4 text-xl text-indigo-100">
+          <p className="mt-4 text-xl text-white">
             Join thousands of developers who have streamlined their development process with StackMatch.
           </p>
           <div className="mt-8">
             <Link href="/auth?signup=true" legacyBehavior>
-              <Button size="lg" className="bg-white text-indigo-700 hover:bg-indigo-50 text-base">
+              <Button size="lg" className="bg-primary text-black hover:bg-primary/90 text-base">
                 Start Your Free Trial
               </Button>
             </Link>
-          </div>
+          </div> 
         </div>
       </div>
+      <Footer />
     </DashboardLayout>
   );
 }

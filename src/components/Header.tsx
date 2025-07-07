@@ -78,14 +78,12 @@ export default function Header({ currentPageName }: HeaderProps) {
 
   const navItems = [
     { name: 'Home', href: '/' },
-    { name: 'Docs', href: '/docs' },
     { name: 'CLI', href: '/cli' },
     { name: 'About Us', href: '/about-us' },
   ];
 
   const publicNavPaths = [
     '/',
-    '/docs',
     '/cli',
     '/about-us',
   ];
@@ -97,12 +95,11 @@ export default function Header({ currentPageName }: HeaderProps) {
       {/* Top Navigation Bar */}
       <div className="relative flex items-center h-full px-4 sm:px-6">
         {/* Left side - Logo and Page Name */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold">
-            <div className="w-6 h-6 bg-primary rounded-sm" />
-            <span>StackMatch</span>
+            <img src="/logo.svg" alt="Logo" className="h-26 w-36" />
           </Link>
           <span className="text-lg font-medium text-gray-700">/</span>
           <span className="text-lg font-medium text-muted-foreground">{currentPageName}</span>
@@ -136,14 +133,6 @@ export default function Header({ currentPageName }: HeaderProps) {
         {/* Right side - Dynamic Content */}
         <div className={`flex items-center gap-4 ml-auto ${loading ? 'invisible' : 'visible'}`}>
             <>
-              {/* Docs Page - Only Search */}
-              {pathname === '/docs' && (
-                <div className="relative">
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search documentation..." className="pl-8 w-64" />
-                </div>
-              )}
-
               {/* Home Page */}
               {pathname === '/' && (user ? (
                 <div className="flex items-center gap-4">
