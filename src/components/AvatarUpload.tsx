@@ -31,7 +31,7 @@ export function AvatarUpload({ userId, currentAvatar }: { userId: string, curren
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full">Change Photo</Button>
+        <Button variant="outline" size="sm" className="w-50">Change Photo</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

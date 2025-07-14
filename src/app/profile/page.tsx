@@ -152,16 +152,6 @@ export default function ProfilePage() {
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isPending} />
                       </div>
-                      <div className="space-y-2">
-                          <Label>Profile Picture</Label>
-                          <div className="flex items-center gap-4">
-                            <Avatar className="h-16 w-16">
-                              <AvatarImage src={user?.user_metadata?.avatar_url} alt={name} />
-                              <AvatarFallback>{getInitials()}</AvatarFallback>
-                            </Avatar>
-                            <AvatarUpload userId={user.id} currentAvatar={user.user_metadata.avatar_url} />
-                          </div>
-                        </div>
                       <Button type="submit" disabled={isPending} className="mt-4">
                         {isPending ? 'Saving...' : 'Save Changes'}
                       </Button>
