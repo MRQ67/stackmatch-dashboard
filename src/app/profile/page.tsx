@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
@@ -11,20 +11,26 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-let Switch: React.FC<{ checked: boolean; onCheckedChange: (checked: boolean) => void }>;
+import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { AvatarUpload } from '@/components/AvatarUpload';
+import { updateProfile } from './actions'
+
+let Switch: React.FC<{ checked: boolean; onCheckedChange: (checked: boolean) => void; disabled?: boolean }>;
 try {
   Switch = require('@/components/ui/switch').Switch;
 } catch (e) {
-  // Fallback Switch component if not available
-  Switch = ({ checked, onCheckedChange }) => (
+  Switch = ({ checked, onCheckedChange, disabled }) => (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
       onClick={() => onCheckedChange(!checked)}
+      disabled={disabled}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background ${
         checked ? 'bg-primary' : 'bg-muted'
-      }`}
+      } ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
     >
       <span
         className={`block h-5 w-5 transform rounded-full bg-background shadow-lg ring-0 transition-transform ${
@@ -34,9 +40,6 @@ try {
     </button>
   );
 }
-import { Separator } from '@/components/ui/separator'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function ProfilePage() {
   const supabase = createClient()
@@ -44,17 +47,14 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [timezone, setTimezone] = useState('UTC+0')
-  const [notifications, setNotifications] = useState<{
-    email: boolean;
-    push: boolean;
-    weeklyReport: boolean;
-  }>({
+  const [notifications, setNotifications] = useState({
     email: true,
     push: false,
     weeklyReport: true
   })
   const [theme, setTheme] = useState('system')
   const [loading, setLoading] = useState(true)
+  const [isPending, startTransition] = useTransition()
   const { addToast } = useToast()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -67,6 +67,7 @@ export default function ProfilePage() {
       if (user) {
         setEmail(user.email || '')
         setName(user.user_metadata?.full_name || '')
+        // Here you would fetch and set other user settings like timezone, notifications, theme
       }
       setLoading(false)
     }
@@ -76,39 +77,32 @@ export default function ProfilePage() {
 
   const getInitials = () => {
     if (!user) return ''
-    return user.email?.charAt(0).toUpperCase() || 'U'
+    return name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U'
   }
 
   const handleUpdateProfile = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setLoading(true)
-    addToast('Updating profile...', 'info')
-
-    if (!user) {
-      addToast('No user logged in.', 'error')
-      setLoading(false)
-      return
-    }
-
-    const oldEmail = user.email;
-    const oldName = name;
-
-    // Optimistic UI update
-    setUser(prev => prev ? { ...prev, email: email, user_metadata: { ...prev.user_metadata, full_name: name } } : null);
-
-    const { error: updateError } = await supabase.auth.updateUser({
-      email: email,
-      data: { full_name: name }
-    })
-
-    if (updateError) {
-      addToast(updateError.message, 'error');
-      // Revert UI on error
-      setUser(prev => prev ? { ...prev, email: oldEmail, user_metadata: { ...prev.user_metadata, full_name: oldName } } : null);
-    } else {
-      addToast('Profile updated successfully!', 'success');
-    }
-    setLoading(false);
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    
+    startTransition(async () => {
+      addToast('Updating profile...', 'info');
+      const result = await updateProfile(formData);
+      if (result.error) {
+        addToast(result.error, 'error');
+      } else {
+        addToast(result.success || 'Profile updated successfully!', 'success');
+      }
+    });
+  }
+  
+  const handleSettingsSave = (type: string) => {
+    startTransition(() => {
+      addToast(`Saving ${type} settings...`, 'info');
+      // Mock saving settings
+      setTimeout(() => {
+        addToast(`${type} settings saved!`, 'success');
+      }, 1000);
+    });
   }
 
   if (loading) {
@@ -133,9 +127,8 @@ export default function ProfilePage() {
         <h2 className="text-2xl font-bold text-card-foreground">Profile Settings</h2>
         
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Left Column - Settings Content */}
           <div className="flex-1">
-            <Tabs value={currentTab} onValueChange={(value) => router.push(`/profile?tab=${value}`)}>
+            <Tabs value={currentTab} onValueChange={(value) => router.push(`/profile?tab=${value}`)} className="w-full">
               <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
                 <TabsTrigger value="profile">Profile</TabsTrigger>
                 <TabsTrigger value="account">Account</TabsTrigger>
@@ -143,54 +136,41 @@ export default function ProfilePage() {
                 <TabsTrigger value="appearance">Appearance</TabsTrigger>
               </TabsList>
               
-              {/* Profile Tab */}
-              <TabsContent value="profile" className="space-y-6">
+              <TabsContent value="profile">
                 <Card>
                   <CardHeader>
                     <CardTitle>Personal Information</CardTitle>
                     <CardDescription>Update your personal information and contact details.</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent>
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name</Label>
-                        <Input 
-                          id="name" 
-                          value={name} 
-                          onChange={(e) => setName(e.target.value)} 
-                          required
-                        />
+                        <Input id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} required disabled={isPending} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          value={email} 
-                          onChange={(e) => setEmail(e.target.value)}
-                          required 
-                        />
+                        <Input id="email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isPending} />
                       </div>
                       <div className="space-y-2">
-                        <Label>Profile Picture</Label>
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-16 w-16">
-                            <AvatarImage src={user?.user_metadata?.avatar_url} alt={name} />
-                            <AvatarFallback>{getInitials()}</AvatarFallback>
-                          </Avatar>
-                          <Button variant="outline" size="sm" type="button">Change</Button>
+                          <Label>Profile Picture</Label>
+                          <div className="flex items-center gap-4">
+                            <Avatar className="h-16 w-16">
+                              <AvatarImage src={user?.user_metadata?.avatar_url} alt={name} />
+                              <AvatarFallback>{getInitials()}</AvatarFallback>
+                            </Avatar>
+                            <AvatarUpload userId={user.id} currentAvatar={user.user_metadata.avatar_url} />
+                          </div>
                         </div>
-                      </div>
-                      <Button type="submit" disabled={loading} className="mt-4">
-                        {loading ? 'Saving...' : 'Save Changes'}
+                      <Button type="submit" disabled={isPending} className="mt-4">
+                        {isPending ? 'Saving...' : 'Save Changes'}
                       </Button>
                     </form>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-              {/* Account Tab */}
-              <TabsContent value="account" className="space-y-6">
+              <TabsContent value="account">
                 <Card>
                   <CardHeader>
                     <CardTitle>Account Settings</CardTitle>
@@ -203,7 +183,7 @@ export default function ProfilePage() {
                           <h4 className="font-medium">Change Password</h4>
                           <p className="text-sm text-muted-foreground">Update your account password</p>
                         </div>
-                        <Button variant="outline">Change Password</Button>
+                        <Button variant="outline" disabled={isPending}>Change Password</Button>
                       </div>
                       <Separator />
                       <div className="flex items-center justify-between">
@@ -211,7 +191,7 @@ export default function ProfilePage() {
                           <h4 className="font-medium">Two-Factor Authentication</h4>
                           <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
                         </div>
-                        <Button variant="outline">Enable 2FA</Button>
+                        <Button variant="outline" disabled={isPending}>Enable 2FA</Button>
                       </div>
                       <Separator />
                       <div className="flex items-center justify-between">
@@ -219,7 +199,7 @@ export default function ProfilePage() {
                           <h4 className="font-medium">Time Zone</h4>
                           <p className="text-sm text-muted-foreground">Set your local time zone</p>
                         </div>
-                        <Select value={timezone} onValueChange={setTimezone}>
+                        <Select value={timezone} onValueChange={setTimezone} disabled={isPending}>
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select timezone" />
                           </SelectTrigger>
@@ -233,12 +213,14 @@ export default function ProfilePage() {
                         </Select>
                       </div>
                     </div>
+                    <Button className="mt-4" onClick={() => handleSettingsSave('Account')} disabled={isPending}>
+                      {isPending ? 'Saving...' : 'Save Account Settings'}
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-              {/* Notifications Tab */}
-              <TabsContent value="notifications" className="space-y-6">
+              <TabsContent value="notifications">
                 <Card>
                   <CardHeader>
                     <CardTitle>Notification Preferences</CardTitle>
@@ -253,7 +235,8 @@ export default function ProfilePage() {
                         </div>
                         <Switch 
                           checked={notifications.email} 
-                          onCheckedChange={(checked: boolean) => setNotifications({...notifications, email: checked})} 
+                          onCheckedChange={(checked) => setNotifications({...notifications, email: checked})} 
+                          disabled={isPending}
                         />
                       </div>
                       <Separator />
@@ -264,7 +247,8 @@ export default function ProfilePage() {
                         </div>
                         <Switch 
                           checked={notifications.push} 
-                          onCheckedChange={(checked: boolean) => setNotifications({...notifications, push: checked})} 
+                          onCheckedChange={(checked) => setNotifications({...notifications, push: checked})} 
+                          disabled={isPending}
                         />
                       </div>
                       <Separator />
@@ -275,17 +259,19 @@ export default function ProfilePage() {
                         </div>
                         <Switch 
                           checked={notifications.weeklyReport} 
-                          onCheckedChange={(checked: boolean) => setNotifications({...notifications, weeklyReport: checked})} 
+                          onCheckedChange={(checked) => setNotifications({...notifications, weeklyReport: checked})} 
+                          disabled={isPending}
                         />
                       </div>
                     </div>
-                    <Button className="mt-4">Save Preferences</Button>
+                    <Button className="mt-4" onClick={() => handleSettingsSave('Notification')} disabled={isPending}>
+                      {isPending ? 'Saving...' : 'Save Notification Preferences'}
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-              {/* Appearance Tab */}
-              <TabsContent value="appearance" className="space-y-6">
+              <TabsContent value="appearance">
                 <Card>
                   <CardHeader>
                     <CardTitle>Appearance</CardTitle>
@@ -294,7 +280,7 @@ export default function ProfilePage() {
                   <CardContent className="space-y-6">
                     <div className="space-y-2">
                       <Label>Theme</Label>
-                      <Select value={theme} onValueChange={setTheme}>
+                      <Select value={theme} onValueChange={setTheme} disabled={isPending}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Select theme" />
                         </SelectTrigger>
@@ -308,19 +294,20 @@ export default function ProfilePage() {
                     <div className="space-y-2">
                       <Label>Font Size</Label>
                       <div className="flex items-center gap-4">
-                        <Button variant="outline" size="sm">Small</Button>
-                        <Button variant="default" size="sm">Medium</Button>
-                        <Button variant="outline" size="sm">Large</Button>
+                        <Button variant="outline" size="sm" disabled={isPending}>Small</Button>
+                        <Button variant="default" size="sm" disabled={isPending}>Medium</Button>
+                        <Button variant="outline" size="sm" disabled={isPending}>Large</Button>
                       </div>
                     </div>
-                    <Button className="mt-4">Save Preferences</Button>
+                    <Button className="mt-4" onClick={() => handleSettingsSave('Appearance')} disabled={isPending}>
+                      {isPending ? 'Saving...' : 'Save Appearance Preferences'}
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
             </Tabs>
           </div>
 
-          {/* Right Column - User Profile Card */}
           <div className="w-full md:w-64 lg:w-80 space-y-6">
             <Card className="sticky top-6">
               <CardContent className="pt-6">
@@ -333,9 +320,7 @@ export default function ProfilePage() {
                     <h3 className="text-lg font-medium">{name || 'User Name'}</h3>
                     <p className="text-sm text-muted-foreground">{email}</p>
                   </div>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Change Photo
-                  </Button>
+                  <AvatarUpload userId={user.id} currentAvatar={user.user_metadata.avatar_url} />
                   
                   <div className="w-full pt-4 border-t mt-4 space-y-2">
                     <div className="flex justify-between text-sm">
