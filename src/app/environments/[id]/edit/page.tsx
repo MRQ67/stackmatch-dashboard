@@ -51,7 +51,7 @@ export default function EnvironmentEditorPage() {
     }
 
     fetchEnvironment()
-  }, [id])
+  }, [id, supabase])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()

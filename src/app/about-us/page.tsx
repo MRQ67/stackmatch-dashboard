@@ -1,6 +1,6 @@
 'use client';
 
-import { Users, Code, Heart, Zap, GitBranch, Shield } from 'lucide-react';
+import { Users, Code, GitBranch, Shield } from 'lucide-react';
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from '@/components/ui/button';
 
@@ -59,7 +59,7 @@ export default function AboutUsPage() {
             Building the Future of Development
           </h1>
           <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            At StackMatch, we're on a mission to revolutionize how developers manage and optimize their development environments.
+            At StackMatch, we&apos;re on a mission to revolutionize how developers manage and optimize their development environments.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function AboutUsPage() {
               </p>
               <p>
                 What started as a simple tool to help our own team has grown into a platform used by thousands of developers worldwide. 
-                We're proud to be building tools that help developers focus on what they do best: creating amazing software.
+                We&apos;re proud to be building tools that help developers focus on what they do best: creating amazing software.
               </p>
             </div>
           </div>

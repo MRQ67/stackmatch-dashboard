@@ -3,7 +3,7 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Download, Terminal, Code, Cpu, Zap, GitBranch, Shield, Copy } from "lucide-react";
+import { Download, Terminal, Code, Cpu, GitBranch, Shield, Copy } from "lucide-react";
 import { useState } from 'react';
 
 const commands = [

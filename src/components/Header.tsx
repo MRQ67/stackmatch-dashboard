@@ -229,9 +229,6 @@ export default function Header({ currentPageName }: HeaderProps) {
                         <DropdownMenuItem asChild>
                           <Link href="/profile">Profile</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href="/settings">Settings</Link>
-                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <div className="p-2">
                           <ThemeToggle />

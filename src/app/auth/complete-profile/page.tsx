@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Upload } from 'lucide-react'
 import { useToast } from '@/components/ToastProvider'
+import imageCompression from 'browser-image-compression'
 
 export default function CompleteProfilePage() {
   const supabase = createClient()
@@ -41,10 +42,18 @@ export default function CompleteProfilePage() {
       let avatar_url = user.user_metadata.avatar_url
 
       if (avatarFile) {
-        const filePath = `${user.id}/${Date.now()}-${avatarFile.name}`
+        addToast('Compressing image...', 'info')
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        }
+        const compressedFile = await imageCompression(avatarFile, options)
+
+        const filePath = `${user.id}/${Date.now()}-${compressedFile.name}`
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('avatars')
-          .upload(filePath, avatarFile, { upsert: true })
+          .upload(filePath, compressedFile, { upsert: true })
 
         if (uploadError) {
           throw uploadError
@@ -69,7 +78,7 @@ export default function CompleteProfilePage() {
       router.refresh()
       router.push('/dashboard')
 
-    } catch (error: any) {
+    } catch (error: Error) {
       addToast(error.message, 'error')
       console.error('Error updating profile:', error)
     } finally {

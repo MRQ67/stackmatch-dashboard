@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ToastProvider'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { updateAvatar } from '@/app/profile/actions'
+import imageCompression from 'browser-image-compression'
 
 export function AvatarUpload({ userId, currentAvatar }: { userId: string, currentAvatar: string }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -14,16 +15,39 @@ export function AvatarUpload({ userId, currentAvatar }: { userId: string, curren
 
   const handleAvatarUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
+    const form = event.currentTarget
+    const fileInput = form.elements.namedItem('avatar') as HTMLInputElement
+    const file = fileInput.files?.[0]
+
+    if (!file) {
+      addToast('Please select a file.', 'error')
+      return
+    }
 
     startTransition(async () => {
-      addToast('Uploading new avatar...', 'info')
-      const result = await updateAvatar(formData)
-      if (result?.error) {
-        addToast(result.error, 'error')
-      } else {
-        addToast('Avatar updated successfully!', 'success')
-        setIsOpen(false)
+      addToast('Compressing image...', 'info')
+      try {
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        }
+        const compressedFile = await imageCompression(file, options)
+
+        const formData = new FormData()
+        formData.append('avatar', compressedFile, compressedFile.name)
+
+        addToast('Uploading new avatar...', 'info')
+        const result = await updateAvatar(formData)
+        if (result?.error) {
+          addToast(result.error, 'error')
+        } else {
+          addToast('Avatar updated successfully!', 'success')
+          setIsOpen(false)
+        }
+      } catch (error) {
+        console.error('Compression or upload error:', error)
+        addToast(error instanceof Error ? error.message : 'An unknown error occurred.', 'error')
       }
     })
   }

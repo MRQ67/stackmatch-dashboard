@@ -21,15 +21,15 @@ interface Environment {
   updated_at: string;
   description?: string;
   is_public?: boolean;
-  data?: any;
+  data?: Record<string, any>;
 }
 
 type SortColumn = 'name' | 'description' | 'updated_at';
 type SortDirection = 'asc' | 'desc';
 
 // Simple JSON diffing function (from compare page)
-const jsonDiff = (obj1: any, obj2: any) => {
-  const diff: { added?: any; removed?: any; changed?: any } = {};
+const jsonDiff = (obj1: Record<string, unknown>, obj2: Record<string, unknown>) => {
+  const diff: { added?: Record<string, unknown>; removed?: Record<string, unknown>; changed?: Record<string, unknown> } = {};
 
   for (const key in obj1) {
     if (!(key in obj2)) {
@@ -80,9 +80,9 @@ export default function DashboardPage() {
   const [allEnvironments, setAllEnvironments] = useState<Environment[]>([])
   const [selectedEnv1, setSelectedEnv1] = useState<string | null>(null)
   const [selectedEnv2, setSelectedEnv2] = useState<string | null>(null)
-  const [env1Details, setEnv1Details] = useState<any>(null)
-  const [env2Details, setEnv2Details] = useState<any>(null)
-  const [loadingCompare, setLoadingCompare] = useState(true)
+  const [env1Details, setEnv1Details] = useState<Environment | null>(null)
+  const [env2Details, setEnv2Details] = useState<Environment | null>(null)
+  const [loadingCompare, setLoadingCompare] = useState(false)
   const [errorCompare, setErrorCompare] = useState<string | null>(null)
 
   // --- Public Environments Tab States ---
@@ -90,7 +90,7 @@ export default function DashboardPage() {
   const [sortColumn, setSortColumn] = useState<SortColumn>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [publicEnvironments, setPublicEnvironments] = useState<Environment[]>([]);
-  const [loadingPublic, setLoadingPublic] = useState(true);
+  const [loadingPublic, setLoadingPublic] = useState(false);
   const [errorPublic, setErrorPublic] = useState<string | null>(null);
 
   // --- Effects for Overview Tab ---
@@ -168,7 +168,7 @@ export default function DashboardPage() {
 
       fetchDashboardData();
     }
-  }, [currentTab]);
+  }, [currentTab, supabase]);
 
   // --- Effects for Compare Tab ---
   useEffect(() => {
@@ -189,11 +189,11 @@ export default function DashboardPage() {
       }
       fetchEnvironments()
     }
-  }, [currentTab]);
+  }, [currentTab, supabase]);
 
   useEffect(() => {
     if (currentTab === 'compare') {
-      const fetchEnvDetails = async (envId: string, setDetails: React.Dispatch<React.SetStateAction<any>>) => {
+      const fetchEnvDetails = async (envId: string, setDetails: React.Dispatch<React.SetStateAction<Environment | null>>) => {
         if (!envId) {
           setDetails(null)
           return
@@ -215,7 +215,7 @@ export default function DashboardPage() {
       fetchEnvDetails(selectedEnv1 as string, setEnv1Details)
       fetchEnvDetails(selectedEnv2 as string, setEnv2Details)
     }
-  }, [currentTab, selectedEnv1, selectedEnv2])
+  }, [currentTab, selectedEnv1, selectedEnv2, supabase])
 
   const comparisonResult = useMemo(() => {
     if (env1Details?.data && env2Details?.data) {
@@ -244,7 +244,7 @@ export default function DashboardPage() {
       };
       fetchPublicEnvironments();
     }
-  }, [currentTab]);
+  }, [currentTab, supabase]);
 
   const handleSort = (column: SortColumn) => {
     if (sortColumn === column) {
@@ -332,12 +332,12 @@ export default function DashboardPage() {
             // addToast('File uploaded and processed successfully!', 'success');
             router.push(`/environments/${data.id}`);
           }
-        } catch (parseError: any) {
+        } catch (parseError: Error) {
           // addToast(`Error parsing JSON file: ${parseError.message}. Please ensure it's valid.`, 'error');
         }
       };
       reader.readAsText(file);
-    } catch (uploadError: any) {
+    } catch (uploadError: Error) {
       // addToast(`Error during file upload: ${uploadError.message}`, 'error');
     }
 

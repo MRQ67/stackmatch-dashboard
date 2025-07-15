@@ -15,7 +15,7 @@ interface Environment {
   name: string;
   description: string;
   updated_at: string;
-  data?: any; // Assuming data is a JSONB column
+  data?: Record<string, any>;
   user_id?: string; // Add user_id to interface
 }
 
@@ -51,7 +51,7 @@ export default function EnvironmentDetailPage() {
     }
 
     fetchEnvironment()
-  }, [id])
+  }, [id, supabase])
 
   const handleClone = async () => {
     setCloning(true)
@@ -91,7 +91,7 @@ export default function EnvironmentDetailPage() {
         setCloneMessage('Environment cloned successfully!')
         router.push(`/environments/${newEnvironment.id}`)
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setCloneMessage(`An unexpected error occurred: ${err.message}`)
     }
 

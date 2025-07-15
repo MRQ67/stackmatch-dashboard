@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
@@ -17,29 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { updateProfile } from './actions'
 
-let Switch: React.FC<{ checked: boolean; onCheckedChange: (checked: boolean) => void; disabled?: boolean }>;
-try {
-  Switch = require('@/components/ui/switch').Switch;
-} catch (e) {
-  Switch = ({ checked, onCheckedChange, disabled }) => (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onCheckedChange(!checked)}
-      disabled={disabled}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background ${
-        checked ? 'bg-primary' : 'bg-muted'
-      } ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
-    >
-      <span
-        className={`block h-5 w-5 transform rounded-full bg-background shadow-lg ring-0 transition-transform ${
-          checked ? 'translate-x-6' : 'translate-x-1'
-        }`}
-      />
-    </button>
-  );
-}
+import { Switch } from '@/components/ui/switch';
 
 export default function ProfilePage() {
   const supabase = createClient()
@@ -73,7 +53,7 @@ export default function ProfilePage() {
     }
 
     fetchUser()
-  }, [])
+  }, [supabase.auth])
 
   const getInitials = () => {
     if (!user) return ''
@@ -124,7 +104,14 @@ export default function ProfilePage() {
   return (
     <DashboardLayout>
       <div className="flex flex-col space-y-6">
-        <h2 className="text-2xl font-bold text-card-foreground">Profile Settings</h2>
+        <div className="flex items-center gap-2">
+          <Link href={`/${user?.id}/dashboard`} legacyBehavior>
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <h2 className="text-2xl font-bold text-card-foreground">Profile Settings</h2>
+        </div>
         
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex-1">
