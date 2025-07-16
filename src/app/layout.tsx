@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import NextTopLoader from 'nextjs-toploader';
 import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
+import Footer from "@/components/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,13 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark h-full">
       <body
-        className={`${inter.variable} font-sans antialiased flex flex-col min-h-full`}
+        className={`${inter.variable} font-sans antialiased flex flex-col min-h-screen`}
       >
         <NextTopLoader showSpinner={false} />
         <ToastProvider>
-          <div className="flex flex-col min-h-screen">
-            {children}
-          </div>
+          <div className="flex-1">{children}</div>
+          <Footer />
         </ToastProvider>
       </body>
     </html>

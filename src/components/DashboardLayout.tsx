@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const showHeader = !noHeaderPaths.includes(pathname);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       {showHeader && <Header currentPageName={getPageName(pathname, searchParams)} />}
       <main className={`flex-1 w-full ${pathname === '/' ? 'bg-background' : 'bg-muted'} ${!showHeader ? 'flex items-center justify-center' : ''}`}>
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
