@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://stackmatch.dev/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /environments/
+Disallow: /profile/
+Disallow: /settings/
+
+# Allow public pages
+Allow: /
+Allow: /about-us
+Allow: /cli
+Allow: /auth
+Allow: /public-environments
+Allow: /popular-environments
+
+# Crawl delay
+Crawl-delay: 1

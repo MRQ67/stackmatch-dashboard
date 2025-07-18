@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import AnimatedLogo from '@/components/AnimatedLogo'
 
 export default function DashboardRedirectPage() {
   const router = useRouter()
@@ -23,8 +24,11 @@ export default function DashboardRedirectPage() {
   }, [router, supabase])
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <p>Redirecting to your dashboard... <span className="animate-spin">⚙️</span></p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+      <AnimatedLogo />
+      <p className="text-lg text-muted-foreground">
+        Redirecting to your dashboard... <span className="animate-spin">⚙️</span>
+      </p>
     </div>
   )
 }
