@@ -103,22 +103,16 @@ export default function CliPage() {
             The command-line interface for managing your development environments with speed and precision.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
-              passHref
-              legacyBehavior>
-              <Button size="lg" className="text-base">
+            <Button size="lg" className="text-base" asChild>
+              <Link href="https://github.com/MRQ67/stackmatch-cli/releases/latest">
                 <Download className="mr-2 h-5 w-5" /> Download Latest
-              </Button>
-            </Link>
-            <Link
-              href="https://github.com/MRQ67/stackmatch-cli"
-              passHref
-              legacyBehavior>
-              <Button size="lg" variant="outline" className="text-base dark:bg-zinc-700 dark:hover:bg-zinc-600">
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-base dark:bg-zinc-700 dark:hover:bg-zinc-600" asChild>
+              <Link href="https://github.com/MRQ67/stackmatch-cli">
                 <GitBranch className="mr-2 h-5 w-5" /> View on GitHub
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 
@@ -333,22 +327,16 @@ stackmatch sync --force`} />
             Download the StackMatch CLI today and take control of your development environments.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="https://github.com/MRQ67/stackmatch-cli/releases/latest"
-              passHref
-              legacyBehavior>
-              <Button size="lg" className="bg-white text-zinc-600 hover:bg-indigo-50">
+            <Button size="lg" className="bg-white text-zinc-600 hover:bg-indigo-50" asChild>
+              <Link href="https://github.com/MRQ67/stackmatch-cli/releases/latest">
                 <Download className="mr-2 h-5 w-5" /> Download Now
-              </Button>
-            </Link>
-            <Link
-              href="https://github.com/MRQ67/stackmatch-cli"
-              passHref
-              legacyBehavior>
-              <Button size="lg" variant="outline" className="text-white dark:border-zinc-700 hover:bg-indigo-600">
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-white dark:border-zinc-700 hover:bg-indigo-600" asChild>
+              <Link href="https://github.com/MRQ67/stackmatch-cli">
                 <GitBranch className="mr-2 h-5 w-5" /> View on GitHub
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

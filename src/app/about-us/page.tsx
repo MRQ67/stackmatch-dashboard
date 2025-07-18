@@ -6,29 +6,11 @@ import { Button } from '@/components/ui/button';
 
 const team = [
   {
-    name: 'Alex Johnson',
-    role: 'Founder & CEO',
-    bio: '10+ years of experience in developer tools and infrastructure. Previously led engineering teams at TechCorp.',
+    name: 'Abdellah Qadi',
+    role: 'Founder',
+    bio: '',
     image: '/team/alex.jpg'
   },
-  {
-    name: 'Samantha Lee',
-    role: 'CTO',
-    bio: 'Expert in cloud infrastructure and distributed systems. Built developer platforms used by thousands of teams.',
-    image: '/team/sam.jpg'
-  },
-  {
-    name: 'Michael Chen',
-    role: 'Lead Developer',
-    bio: 'Full-stack engineer passionate about creating intuitive developer experiences and scalable architectures.',
-    image: '/team/michael.jpg'
-  },
-  {
-    name: 'Emma Wilson',
-    role: 'Product Designer',
-    bio: 'Design leader focused on creating seamless user experiences for complex technical products.',
-    image: '/team/emma.jpg'
-  }
 ];
 
 const values = [
@@ -69,7 +51,7 @@ export default function AboutUsPage() {
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Story</h2>
             <div className="space-y-6 text-gray-600 dark:text-gray-300">
               <p>
-                Founded in 2023, StackMatch was born out of frustration with the complexity of managing development environments across teams. 
+                Founded in 2024, StackMatch was born out of frustration with the complexity of managing development environments across teams. 
                 Our team of experienced developers and designers came together to create a solution that would make environment management 
                 seamless, secure, and collaborative.
               </p>
@@ -102,7 +84,7 @@ export default function AboutUsPage() {
         {/* Team Section */}
         <div className="py-12">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Meet Our Team</h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-1 lg:grid-cols-1">
             {team.map((member, index) => (
               <div key={index} className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
                 <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">

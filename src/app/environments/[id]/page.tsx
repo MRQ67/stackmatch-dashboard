@@ -154,11 +154,11 @@ export default function EnvironmentDetailPage() {
           >
             {cloning ? 'Cloning...' : 'Clone Environment'}
           </Button>
-          <Link href={`/environments/${environment.id}/edit`} legacyBehavior>
-            <Button>
+          <Button asChild>
+            <Link href={`/environments/${environment.id}/edit`}>
               Edit Environment
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="destructive">Delete Environment</Button>

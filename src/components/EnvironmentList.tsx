@@ -127,8 +127,7 @@ export default function EnvironmentList() {
               <CardTitle className="text-lg font-medium">
                 <Link
                   href={`/environments/${env.id}`}
-                  className="hover:underline"
-                  legacyBehavior>
+                  className="hover:underline">
                   {env.name}
                 </Link>
               </CardTitle>

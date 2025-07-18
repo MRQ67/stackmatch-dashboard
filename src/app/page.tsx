@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Code, GitBranch, Shield, BarChart, Zap, Users, Terminal } from 'lucide-react';
 import DashboardLayout from "@/components/DashboardLayout";
-import Footer from "@/components/Footer";
 import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
@@ -52,17 +51,17 @@ export default function HomePage() {
             StackMatch helps developers manage, compare, and optimize their development environments with powerful tools and integrations.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link href="/auth?signup=true" legacyBehavior>
-              <Button size="lg" className="text-base">
+            <Button size="lg" className="text-base" asChild>
+              <Link href="/auth?signup=true">
                 Get Started for Free
                 <Zap className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/about-us" legacyBehavior>
-              <Button size="lg" variant="outline" className="text-base">
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-base" asChild>
+              <Link href="/about-us">
                 Learn More
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 
@@ -102,15 +101,15 @@ export default function HomePage() {
             Join thousands of developers who have streamlined their development process with StackMatch.
           </p>
           <div className="mt-8">
-            <Link href="/auth?signup=true" legacyBehavior>
-              <Button size="lg" className="bg-primary text-black hover:bg-primary/90 text-base">
+            <Button size="lg" className="bg-primary text-black hover:bg-primary/90 text-base" asChild>
+              <Link href="/auth?signup=true">
                 Start Your Free Trial
-              </Button>
-            </Link>
-          </div> 
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
-      
+
     </DashboardLayout>
   );
 }
