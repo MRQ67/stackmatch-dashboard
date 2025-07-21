@@ -323,8 +323,8 @@ function ProfileContent() {
       </div>
     </DashboardLayout>
   )
-}// Ma
-in component that wraps ProfileContent with Suspense
+}
+// Main component that wraps ProfileContent with Suspense
 export default function ProfilePage() {
   return (
     <Suspense fallback={

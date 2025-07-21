@@ -169,8 +169,7 @@ function AuthContent() {
       </Card>
     </div>
   )
-}/
-/ Main component that wraps AuthContent with Suspense
+}// Main component that wraps AuthContent with Suspense
 export default function AuthPage() {
   return (
     <Suspense fallback={
