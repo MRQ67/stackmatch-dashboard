@@ -40,7 +40,7 @@ function ProfileContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentTab = searchParams.get('tab') || 'profile';
-  
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,7 +65,7 @@ function ProfileContent() {
   const handleUpdateProfile = async (event: React.FormEvent) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
-    
+
     startTransition(async () => {
       addToast('Updating profile...', 'info');
       const result = await updateProfile(formData);
@@ -76,7 +76,7 @@ function ProfileContent() {
       }
     });
   }
-  
+
   const handleSettingsSave = (type: string) => {
     startTransition(() => {
       addToast(`Saving ${type} settings...`, 'info');
@@ -114,7 +114,7 @@ function ProfileContent() {
           </Button>
           <h2 className="text-2xl font-bold text-card-foreground">Profile Settings</h2>
         </div>
-        
+
         <div className="flex flex-col md:flex-row gap-8">
           <div className="flex-1">
             <Tabs value={currentTab} onValueChange={(value) => router.push(`/profile?tab=${value}`)} className="w-full">
@@ -124,7 +124,7 @@ function ProfileContent() {
                 <TabsTrigger value="notifications">Notifications</TabsTrigger>
                 <TabsTrigger value="appearance">Appearance</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="profile">
                 <Card>
                   <CardHeader>
@@ -212,9 +212,9 @@ function ProfileContent() {
                           <h4 className="font-medium">Email Notifications</h4>
                           <p className="text-sm text-muted-foreground">Receive email notifications</p>
                         </div>
-                        <Switch 
-                          checked={notifications.email} 
-                          onCheckedChange={(checked) => setNotifications({...notifications, email: checked})} 
+                        <Switch
+                          checked={notifications.email}
+                          onCheckedChange={(checked) => setNotifications({ ...notifications, email: checked })}
                           disabled={isPending}
                         />
                       </div>
@@ -224,9 +224,9 @@ function ProfileContent() {
                           <h4 className="font-medium">Push Notifications</h4>
                           <p className="text-sm text-muted-foreground">Enable push notifications</p>
                         </div>
-                        <Switch 
-                          checked={notifications.push} 
-                          onCheckedChange={(checked) => setNotifications({...notifications, push: checked})} 
+                        <Switch
+                          checked={notifications.push}
+                          onCheckedChange={(checked) => setNotifications({ ...notifications, push: checked })}
                           disabled={isPending}
                         />
                       </div>
@@ -236,9 +236,9 @@ function ProfileContent() {
                           <h4 className="font-medium">Weekly Reports</h4>
                           <p className="text-sm text-muted-foreground">Get weekly activity reports</p>
                         </div>
-                        <Switch 
-                          checked={notifications.weeklyReport} 
-                          onCheckedChange={(checked) => setNotifications({...notifications, weeklyReport: checked})} 
+                        <Switch
+                          checked={notifications.weeklyReport}
+                          onCheckedChange={(checked) => setNotifications({ ...notifications, weeklyReport: checked })}
                           disabled={isPending}
                         />
                       </div>
@@ -300,7 +300,7 @@ function ProfileContent() {
                     <p className="text-sm text-muted-foreground">{email}</p>
                   </div>
                   <AvatarUpload />
-                  
+
                   <div className="w-full pt-4 border-t mt-4 space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Member since</span>
