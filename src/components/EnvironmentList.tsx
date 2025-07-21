@@ -30,8 +30,8 @@ export default function EnvironmentList() {
   const supabase = createClient()
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortColumn, setSortColumn] = useState<SortColumn>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [sortColumn] = useState<SortColumn>('name');
+  const [sortDirection] = useState<SortDirection>('asc');
   const [environments, setEnvironments] = useState<Environment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

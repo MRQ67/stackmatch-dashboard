@@ -106,7 +106,7 @@ export default function AboutUsPage() {
             Join Our Growing Community
           </h2>
           <p className="mt-2 text-xl text-indigo-100 max-w-2xl mx-auto">
-            We're always looking for passionate individuals to join our team or contribute to our open-source projects.
+            We&apos;re always looking for passionate individuals to join our team or contribute to our open-source projects.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="bg-white text-indigo-700 hover:bg-indigo-50">

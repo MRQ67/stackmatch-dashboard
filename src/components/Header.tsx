@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter, usePathname } from 'next/navigation'
 import {
   Avatar,
@@ -17,7 +18,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -31,6 +31,7 @@ import ThemeToggle from './ThemeToggle'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
+import { User } from '@supabase/supabase-js'
 
 interface HeaderProps {
   currentPageName: string;
@@ -38,7 +39,7 @@ interface HeaderProps {
 
 export default function Header({ currentPageName }: HeaderProps) {
   const supabase = createClient();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -54,7 +55,7 @@ export default function Header({ currentPageName }: HeaderProps) {
     fetchAndSetUser();
 
     // Set up a listener for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       // When the user signs in or their data is updated, fetch the latest user data
       if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
         fetchAndSetUser();
@@ -99,7 +100,7 @@ export default function Header({ currentPageName }: HeaderProps) {
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold">
-            <img src="/logo.svg" alt="Logo" className="h-26 w-36" />
+            <Image src="/logo.svg" alt="Logo" width={144} height={104} className="h-26 w-36" />
           </Link>
           <span className="text-lg font-medium text-gray-700">/</span>
           <span className="text-lg font-medium text-muted-foreground">{currentPageName}</span>

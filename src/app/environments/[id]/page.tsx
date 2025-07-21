@@ -15,7 +15,7 @@ interface Environment {
   name: string;
   description: string;
   updated_at: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   user_id?: string; // Add user_id to interface
 }
 
@@ -91,8 +91,12 @@ export default function EnvironmentDetailPage() {
         setCloneMessage('Environment cloned successfully!')
         router.push(`/environments/${newEnvironment.id}`)
       }
-    } catch (err: any) {
-      setCloneMessage(`An unexpected error occurred: ${err.message}`)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setCloneMessage(`An unexpected error occurred: ${err.message}`)
+      } else {
+        setCloneMessage('An unexpected error occurred')
+      }
     }
 
     setCloning(false)

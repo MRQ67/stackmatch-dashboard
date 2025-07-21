@@ -83,15 +83,15 @@ export default function DashboardPage() {
   const [selectedEnv2, setSelectedEnv2] = useState<string | null>(null)
   const [env1Details, setEnv1Details] = useState<Environment | null>(null)
   const [env2Details, setEnv2Details] = useState<Environment | null>(null)
-  const [loadingCompare, setLoadingCompare] = useState(true);
-  const [errorCompare, setErrorCompare] = useState<string | null>(null);
+  // Loading and error states for compare tab
+  const [, setLoadingCompare] = useState(true);
+  const [, setErrorCompare] = useState<string | null>(null);
   
 
   // --- Public Environments Tab States ---
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<SortColumn>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [user, setUser] = useState<User | null>(null)
   const [environments, setEnvironments] = useState<Environment[]>([])
   const [loadingPublic, setLoadingPublic] = useState(false);
   const [errorPublic, setErrorPublic] = useState<string | null>(null);
@@ -336,13 +336,13 @@ export default function DashboardPage() {
             // addToast('File uploaded and processed successfully!', 'success');
             router.push(`/environments/${data.id}`);
           }
-        } catch (parseError: any) {
-          // addToast(`Error parsing JSON file: ${parseError.message}. Please ensure it's valid.`, 'error');
+        } catch (parseError: unknown) {
+          // addToast(`Error parsing JSON file: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Please ensure it's valid.`, 'error');
         }
       };
       reader.readAsText(file);
-    } catch (uploadError: any) {
-      // addToast(`Error during file upload: ${uploadError.message}`, 'error');
+    } catch (uploadError: unknown) {
+      // addToast(`Error during file upload: ${uploadError instanceof Error ? uploadError.message : 'Unknown error'}`, 'error');
     }
 
     setLoadingScanner(false);
@@ -400,7 +400,7 @@ export default function DashboardPage() {
                   {loadingShared ? "Loading..." : errorShared ? "Error" : (environmentsShared !== null ? String(environmentsShared) : 'N/A')}
                 </p>
               )}
-              <p className="text-sm text-muted-foreground">Number of environments you've made public</p>
+              <p className="text-sm text-muted-foreground">Number of environments you&apos;ve made public</p>
             </DashboardCard>
           </div>
 
