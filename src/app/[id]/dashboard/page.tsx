@@ -21,7 +21,7 @@ interface Environment {
   description: string;
   updated_at: string;
   is_public: boolean;
-  data: unknown;
+  data: Record<string, unknown> | string | null;
 }
 
 type SortColumn = 'name' | 'description' | 'updated_at';
