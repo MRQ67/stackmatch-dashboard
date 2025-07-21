@@ -5,7 +5,6 @@ import Link from 'next/link'
 import DashboardLayout from "@/components/DashboardLayout"
 import DashboardCard from "@/components/DashboardCard"
 import { createClient } from '@/lib/supabase/client'
-import { User } from '@supabase/supabase-js'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -92,9 +91,7 @@ export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<SortColumn>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [environments, setEnvironments] = useState<Environment[]>([])
-  const [loadingPublic, setLoadingPublic] = useState(false);
-  const [errorPublic, setErrorPublic] = useState<string | null>(null);
+  const [environments, setEnvironments] = useState<Environment[]>([]);
 
   // --- Effects for Overview Tab ---
   useEffect(() => {
@@ -232,19 +229,16 @@ export default function DashboardPage() {
   useEffect(() => {
     if (currentTab === 'public-environments') {
       const fetchPublicEnvironments = async () => {
-        setLoadingPublic(true);
         const { data, error } = await supabase
           .from('environments')
           .select('*')
           .eq('is_public', true);
 
         if (error) {
-          setErrorPublic(error.message);
-          setLoadingPublic(false);
+          console.error('Error fetching public environments:', error.message);
           return;
         }
         setEnvironments(data || []);
-        setLoadingPublic(false);
       };
       fetchPublicEnvironments();
     }
@@ -336,13 +330,13 @@ export default function DashboardPage() {
             // addToast('File uploaded and processed successfully!', 'success');
             router.push(`/environments/${data.id}`);
           }
-        } catch (parseError: unknown) {
-          // addToast(`Error parsing JSON file: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Please ensure it's valid.`, 'error');
+        } catch {
+          // addToast(`Error parsing JSON file. Please ensure it's valid.`, 'error');
         }
       };
       reader.readAsText(file);
-    } catch (uploadError: unknown) {
-      // addToast(`Error during file upload: ${uploadError instanceof Error ? uploadError.message : 'Unknown error'}`, 'error');
+    } catch {
+      // addToast(`Error during file upload`, 'error');
     }
 
     setLoadingScanner(false);
