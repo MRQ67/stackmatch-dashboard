@@ -533,7 +533,7 @@ export default function DashboardPage() {
                       <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-2 text-foreground">Configuration:</h4>
                         <pre className="bg-muted p-4 rounded-md overflow-auto text-sm text-foreground">
-                          {JSON.stringify(env1Details.data, null, 2)}
+                          {typeof env1Details.data === 'object' ? JSON.stringify(env1Details.data, null, 2) : String(env1Details.data)}
                         </pre>
                       </div>
                     )}
@@ -553,7 +553,7 @@ export default function DashboardPage() {
                       <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-2 text-foreground">Configuration:</h4>
                         <pre className="bg-muted p-4 rounded-md overflow-auto text-sm text-foreground">
-                          {JSON.stringify(env2Details.data, null, 2)}
+                          {typeof env2Details.data === 'object' ? JSON.stringify(env2Details.data, null, 2) : String(env2Details.data)}
                         </pre>
                       </div>
                     )}
