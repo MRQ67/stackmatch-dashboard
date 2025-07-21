@@ -39,6 +39,7 @@ export default function ProfilePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentTab = searchParams.get('tab') || 'profile';
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -297,7 +298,7 @@ export default function ProfilePage() {
                     <h3 className="text-lg font-medium">{name || 'User Name'}</h3>
                     <p className="text-sm text-muted-foreground">{email}</p>
                   </div>
-                  <AvatarUpload userId={user.id} currentAvatar={user.user_metadata.avatar_url} />
+                  <AvatarUpload />
                   
                   <div className="w-full pt-4 border-t mt-4 space-y-2">
                     <div className="flex justify-between text-sm">

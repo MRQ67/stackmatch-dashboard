@@ -5,6 +5,7 @@ import Link from 'next/link'
 import DashboardLayout from "@/components/DashboardLayout"
 import DashboardCard from "@/components/DashboardCard"
 import { createClient } from '@/lib/supabase/client'
+import { User } from '@supabase/supabase-js'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -18,10 +19,10 @@ import EnvironmentList from '@/components/EnvironmentList'
 interface Environment {
   id: string;
   name: string;
+  description: string;
   updated_at: string;
-  description?: string;
-  is_public?: boolean;
-  data?: Record<string, any>;
+  is_public: boolean;
+  data: unknown;
 }
 
 type SortColumn = 'name' | 'description' | 'updated_at';
@@ -82,14 +83,16 @@ export default function DashboardPage() {
   const [selectedEnv2, setSelectedEnv2] = useState<string | null>(null)
   const [env1Details, setEnv1Details] = useState<Environment | null>(null)
   const [env2Details, setEnv2Details] = useState<Environment | null>(null)
-  const [loadingCompare, setLoadingCompare] = useState(false)
-  const [errorCompare, setErrorCompare] = useState<string | null>(null)
+  const [loadingCompare, setLoadingCompare] = useState(true);
+  const [errorCompare, setErrorCompare] = useState<string | null>(null);
+  
 
   // --- Public Environments Tab States ---
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<SortColumn>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [publicEnvironments, setPublicEnvironments] = useState<Environment[]>([]);
+  const [user, setUser] = useState<User | null>(null)
+  const [environments, setEnvironments] = useState<Environment[]>([])
   const [loadingPublic, setLoadingPublic] = useState(false);
   const [errorPublic, setErrorPublic] = useState<string | null>(null);
 
@@ -132,7 +135,7 @@ export default function DashboardPage() {
         // Fetch recent environments for the logged-in user
         const { data: recentData, error: recentError } = await supabase
           .from('environments')
-          .select('id, name, updated_at')
+          .select('id, name, description, updated_at, is_public, data')
           .eq('user_id', user.id)
           .order('updated_at', { ascending: false })
           .limit(5);
@@ -177,14 +180,14 @@ export default function DashboardPage() {
         setLoadingCompare(true)
         const { data, error } = await supabase
           .from('environments')
-          .select('id, name, description, updated_at, data')
+          .select('id, name, description, updated_at, is_public, data')
 
         if (error) {
           setErrorCompare(error.message)
           setLoadingCompare(false)
           return
         }
-        setAllEnvironments(data || [])
+        setAllEnvironments(data as Environment[] || [])
         setLoadingCompare(false)
       }
       fetchEnvironments()
@@ -218,8 +221,9 @@ export default function DashboardPage() {
   }, [currentTab, selectedEnv1, selectedEnv2, supabase])
 
   const comparisonResult = useMemo(() => {
-    if (env1Details?.data && env2Details?.data) {
-      return jsonDiff(env1Details.data, env2Details.data);
+    if (env1Details?.data && typeof env1Details.data === 'object' && env1Details.data !== null &&
+        env2Details?.data && typeof env2Details.data === 'object' && env2Details.data !== null) {
+      return jsonDiff(env1Details.data as Record<string, unknown>, env2Details.data as Record<string, unknown>);
     }
     return null;
   }, [env1Details, env2Details]);
@@ -239,7 +243,7 @@ export default function DashboardPage() {
           setLoadingPublic(false);
           return;
         }
-        setPublicEnvironments(data || []);
+        setEnvironments(data || []);
         setLoadingPublic(false);
       };
       fetchPublicEnvironments();
@@ -256,7 +260,7 @@ export default function DashboardPage() {
   };
 
   const sortedAndFilteredPublicEnvironments = useMemo(() => {
-    let sortableEnvironments = [...publicEnvironments];
+    let sortableEnvironments = [...environments];
 
     if (searchTerm) {
       sortableEnvironments = sortableEnvironments.filter(env =>
@@ -274,7 +278,7 @@ export default function DashboardPage() {
       return 0;
     });
     return sortableEnvironments;
-  }, [publicEnvironments, searchTerm, sortColumn, sortDirection]);
+  }, [environments, searchTerm, sortColumn, sortDirection]);
 
   // --- Scanner Tab Handlers ---
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,12 +336,12 @@ export default function DashboardPage() {
             // addToast('File uploaded and processed successfully!', 'success');
             router.push(`/environments/${data.id}`);
           }
-        } catch (parseError: Error) {
+        } catch (parseError: any) {
           // addToast(`Error parsing JSON file: ${parseError.message}. Please ensure it's valid.`, 'error');
         }
       };
       reader.readAsText(file);
-    } catch (uploadError: Error) {
+    } catch (uploadError: any) {
       // addToast(`Error during file upload: ${uploadError.message}`, 'error');
     }
 
@@ -363,13 +367,9 @@ export default function DashboardPage() {
               <DashboardCard title="Total Environments">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    {loadingTotal ? (
-                      <p className="text-xl text-muted-foreground">Loading...</p>
-                    ) : errorTotal ? (
-                      <p className="text-xl text-destructive">Error</p>
-                    ) : (
-                      <p className="text-3xl font-bold text-foreground">{totalEnvironments}</p>
-                    )}
+                    <p className="text-3xl font-bold text-foreground">
+                      {loadingTotal ? "Loading..." : errorTotal ? "Error" : (totalEnvironments !== null ? String(totalEnvironments) : 'N/A')}
+                    </p>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Total number of environments you have created or cloned.</p>
@@ -396,7 +396,9 @@ export default function DashboardPage() {
               ) : errorShared ? (
                 <p className="text-xl text-destructive">Error</p>
               ) : (
-                <p className="text-3xl font-bold text-foreground">{environmentsShared}</p>
+                <p className="text-3xl font-bold text-foreground">
+                  {loadingShared ? "Loading..." : errorShared ? "Error" : (environmentsShared !== null ? String(environmentsShared) : 'N/A')}
+                </p>
               )}
               <p className="text-sm text-muted-foreground">Number of environments you've made public</p>
             </DashboardCard>
@@ -569,14 +571,14 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {comparisonResult && (Object.keys(comparisonResult).length > 0) && (
+          {!!comparisonResult && (Object.keys(comparisonResult).length > 0) && (
             <div className="mt-8 bg-card p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-4 text-card-foreground">Differences</h3>
               {comparisonResult.added && (
                 <div className="mb-4">
                   <h4 className="text-lg font-semibold text-primary">Added in Environment 2:</h4>
                   <pre className="bg-muted p-4 rounded-md overflow-auto text-sm text-foreground">
-                    {JSON.stringify(comparisonResult.added, null, 2)}
+                    {comparisonResult.added ? JSON.stringify(comparisonResult.added, null, 2) : ''}
                   </pre>
                 </div>
               )}
@@ -584,7 +586,7 @@ export default function DashboardPage() {
                 <div className="mb-4">
                   <h4 className="text-lg font-semibold text-destructive">Removed from Environment 2:</h4>
                   <pre className="bg-muted p-4 rounded-md overflow-auto text-sm text-foreground">
-                    {JSON.stringify(comparisonResult.removed, null, 2)}
+                    {comparisonResult.removed ? JSON.stringify(comparisonResult.removed, null, 2) : ''}
                   </pre>
                 </div>
               )}
@@ -592,7 +594,7 @@ export default function DashboardPage() {
                 <div className="mb-4">
                   <h4 className="text-lg font-semibold text-accent-foreground">Changed:</h4>
                   <pre className="bg-muted p-4 rounded-md overflow-auto text-sm text-foreground">
-                    {JSON.stringify(comparisonResult.changed, null, 2)}
+                    {comparisonResult.changed ? JSON.stringify(comparisonResult.changed, null, 2) : ''}
                   </pre>
                 </div>
               )}

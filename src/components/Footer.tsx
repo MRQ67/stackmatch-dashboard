@@ -1,5 +1,5 @@
 
-'use client';
+import Image from 'next/image';
 
 import Link from 'next/link';
 import { VelocityScroll } from "@/components/magicui/scroll-based-velocity";
@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
             <div className="flex items-center">
-              <img src="/footer.svg" alt="StackMatch by" className="h-14 w-auto" />
+              <Image src="/footer.svg" alt="StackMatch by" width={140} height={56} className="h-14 w-auto" />
             </div>
             <p className="text-gray-500 dark:text-gray-400 text-base">
               Empowering developers with better environment management tools.

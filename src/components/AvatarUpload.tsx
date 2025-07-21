@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { updateAvatar } from '@/app/profile/actions'
 import imageCompression from 'browser-image-compression'
 
-export function AvatarUpload({ userId, currentAvatar }: { userId: string, currentAvatar: string }) {
+export function AvatarUpload() {
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const { addToast } = useToast()

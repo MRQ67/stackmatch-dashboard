@@ -91,7 +91,7 @@ export default function EnvironmentDetailPage() {
         setCloneMessage('Environment cloned successfully!')
         router.push(`/environments/${newEnvironment.id}`)
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setCloneMessage(`An unexpected error occurred: ${err.message}`)
     }
 
