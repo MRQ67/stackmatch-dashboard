@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, Suspense } from 'react'
 import Link from 'next/link'
 import DashboardLayout from "@/components/DashboardLayout"
 import DashboardCard from "@/components/DashboardCard"
@@ -14,6 +14,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import EnvironmentList from '@/components/EnvironmentList'
+import { Main } from 'next/document'
+
 
 interface Environment {
   id: string;
@@ -50,7 +52,8 @@ const jsonDiff = (obj1: Record<string, unknown>, obj2: Record<string, unknown>) 
   return diff;
 };
 
-export default function DashboardPage() {
+// Create a component that uses useSearchParams
+function DashboardContent() {
   const supabase = createClient()
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -660,5 +663,30 @@ export default function DashboardPage() {
         </TabsContent>
       </Tabs>
     </DashboardLayout>
+  );
+}
+// Main component that wraps DashboardContent with Suspense
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="animate-pulse space-y-8">
+          <div className="h-8 bg-card rounded w-1/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-40 bg-card rounded"></div>
+            ))}
+          </div>
+          <div className="h-8 bg-card rounded w-1/3"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-32 bg-card rounded"></div>
+            ))}
+          </div>
+        </div>
+      </DashboardLayout>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }

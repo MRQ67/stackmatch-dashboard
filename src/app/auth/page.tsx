@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Main } from 'next/document'
 
-export default function AuthPage() {
+// Component that uses useSearchParams
+function AuthContent() {
   const supabase = createClient()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -167,4 +169,37 @@ export default function AuthPage() {
       </Card>
     </div>
   )
+}/
+/ Main component that wraps AuthContent with Suspense
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Card className="w-full max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden md:grid md:grid-cols-2">
+          <div className="flex flex-col items-center justify-center p-8 bg-card text-foreground">
+            <div className="w-24 h-24 mb-4 bg-primary rounded-full animate-pulse"></div>
+            <div className="h-8 bg-card rounded w-1/2 animate-pulse mb-2"></div>
+            <div className="h-4 bg-card rounded w-3/4 animate-pulse"></div>
+          </div>
+          <div className="p-8">
+            <div className="text-center mb-4">
+              <div className="h-8 bg-card rounded w-1/2 mx-auto animate-pulse"></div>
+            </div>
+            <div className="space-y-4 animate-pulse">
+              <div className="h-10 bg-card rounded"></div>
+              <div className="h-10 bg-card rounded"></div>
+              <div className="h-10 bg-card rounded"></div>
+              <div className="h-10 bg-card rounded"></div>
+              <div className="h-1 bg-card rounded my-6"></div>
+              <div className="h-10 bg-card rounded"></div>
+              <div className="h-10 bg-card rounded"></div>
+              <div className="h-6 bg-card rounded w-1/2 mx-auto mt-4"></div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    }>
+      <AuthContent />
+    </Suspense>
+  );
 }

@@ -1,11 +1,12 @@
 
 'use client'
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Header from './Header'
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+// Create a separate component that uses useSearchParams
+function DashboardContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -90,4 +91,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </main>
     </div>
   )
+}
+// Main DashboardLayout component that wraps DashboardContent with Suspense
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col h-full bg-background">
+        <div className="h-16 bg-card border-b border-border"></div>
+        <main className="flex-1 w-full bg-muted">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="animate-pulse flex space-x-4">
+              <div className="flex-1 space-y-6 py-1">
+                <div className="h-4 bg-card rounded w-3/4"></div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="h-4 bg-card rounded col-span-2"></div>
+                    <div className="h-4 bg-card rounded col-span-1"></div>
+                  </div>
+                  <div className="h-4 bg-card rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    }>
+      <DashboardContent>{children}</DashboardContent>
+    </Suspense>
+  );
 }

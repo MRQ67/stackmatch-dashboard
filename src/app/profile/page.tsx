@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition, Suspense } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
@@ -21,7 +21,8 @@ import { updateProfile } from './actions'
 
 import { Switch } from '@/components/ui/switch';
 
-export default function ProfilePage() {
+// Create a component that uses useSearchParams
+function ProfileContent() {
   const supabase = createClient()
   const [user, setUser] = useState<User | null>(null)
   const [email, setEmail] = useState('')
@@ -322,4 +323,27 @@ export default function ProfilePage() {
       </div>
     </DashboardLayout>
   )
+}// Ma
+in component that wraps ProfileContent with Suspense
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="animate-pulse space-y-8">
+          <div className="h-8 bg-card rounded w-1/4"></div>
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-1">
+              <div className="h-12 bg-card rounded mb-6"></div>
+              <div className="h-64 bg-card rounded"></div>
+            </div>
+            <div className="w-full md:w-64 lg:w-80">
+              <div className="h-80 bg-card rounded"></div>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    }>
+      <ProfileContent />
+    </Suspense>
+  );
 }
