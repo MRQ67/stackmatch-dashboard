@@ -78,9 +78,14 @@ export default function CompleteProfilePage() {
       router.refresh()
       router.push('/dashboard')
 
-    } catch (error: Error) {
-      addToast(error.message, 'error')
-      console.error('Error updating profile:', error)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        addToast(error.message, 'error')
+        console.error('Error updating profile:', error)
+      } else {
+        addToast('An unknown error occurred', 'error')
+        console.error('Unknown error:', error)
+      }
     } finally {
       setLoading(false)
     }
