@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 export default function AnimatedLogo() {
   const [isVisible, setIsVisible] = useState(true)
@@ -14,14 +15,21 @@ export default function AnimatedLogo() {
   }, [])
 
   return (
-    <div className="flex items-center justify-center mb-8">
-      <svg
+    <motion.div 
+      className="flex items-center justify-center mb-8"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <motion.svg
         width="200"
         height="80"
         viewBox="0 0 400 160"
         className="text-primary"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.2 }}
       >
         {/* Simplified StackMatch Logo Paths */}
         <g>
@@ -184,7 +192,7 @@ export default function AnimatedLogo() {
             }}
           />
         </g>
-      </svg>
-    </div>
+      </motion.svg>
+    </motion.div>
   )
 }

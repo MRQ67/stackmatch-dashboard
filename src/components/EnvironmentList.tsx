@@ -12,6 +12,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input' // Keep Input for search bar
+import { motion } from 'framer-motion'
 
 interface Environment {
   id: string;
@@ -114,8 +115,15 @@ export default function EnvironmentList() {
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sortedAndFilteredEnvironments.map((env) => (
-          <Card key={env.id} className="flex flex-col">
+        {sortedAndFilteredEnvironments.map((env, index) => (
+          <motion.div
+            key={env.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+          >
+            <Card className="flex flex-col h-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-medium">
                 <Link
@@ -172,6 +180,7 @@ export default function EnvironmentList() {
               </span>
             </CardFooter>
           </Card>
+          </motion.div>
         ))}
       </div>
     </div>

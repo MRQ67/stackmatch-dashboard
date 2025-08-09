@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { motion } from 'framer-motion'
 
 // Component that uses useSearchParams
 function AuthContent() {
@@ -79,23 +80,55 @@ function AuthContent() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
-      <Card className="w-full max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden md:grid md:grid-cols-2">
-        {/* Left Section - Logo and Description */}
-        <div className="flex flex-col items-center justify-center p-8 bg-card text-foreground">
-          {/* Placeholder for a larger logo */}
-          <div className="w-24 h-24 mb-4 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-4xl font-bold">
-            S
-          </div>
-          <h2 className="text-3xl font-bold mb-2">StackMatch</h2>
-          <p className="text-center text-sm opacity-90">
-            {isSignUp
-              ? "Create your account to start managing and comparing your development environments." 
-              : "Sign in to your account to access your personalized dashboard and environment tools."}
-          </p>
-        </div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="w-full max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden md:grid md:grid-cols-2">
+          {/* Left Section - Logo and Description */}
+          <motion.div 
+            className="flex flex-col items-center justify-center p-8 bg-card text-foreground"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {/* Placeholder for a larger logo */}
+            <motion.div 
+              className="w-24 h-24 mb-4 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-4xl font-bold"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              S
+            </motion.div>
+            <motion.h2 
+              className="text-3xl font-bold mb-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              StackMatch
+            </motion.h2>
+            <motion.p 
+              className="text-center text-sm opacity-90"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+            >
+              {isSignUp
+                ? "Create your account to start managing and comparing your development environments." 
+                : "Sign in to your account to access your personalized dashboard and environment tools."}
+            </motion.p>
+          </motion.div>
 
-        {/* Right Section - Auth Form */}
-        <div className="p-8">
+          {/* Right Section - Auth Form */}
+          <motion.div 
+            className="p-8"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold mb-4 text-foreground">
               {isSignUp ? 'Sign Up' : 'Sign In'}
@@ -164,8 +197,9 @@ function AuthContent() {
               Forgot your password?
             </Link>
           </CardContent>
-        </div>
-      </Card>
+          </motion.div>
+        </Card>
+      </motion.div>
     </div>
   )
 }// Main component that wraps AuthContent with Suspense
