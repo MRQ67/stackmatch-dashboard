@@ -1,9 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StackMatch Dashboard
 
-## Getting Started
+A comprehensive dashboard application built with Next.js 15, TypeScript, and modern web technologies. StackMatch Dashboard provides a powerful platform for managing environments, user profiles, analytics, and more.
 
-First, run the development server:
+## ✨ Features
 
+- 🔐 **Authentication & Authorization** - Complete auth system with profile management
+- 👥 **User Management** - User profiles with avatar uploads and settings
+- 🏗️ **Environment Management** - Create, edit, and manage development environments
+- 📊 **Analytics Dashboard** - Comprehensive analytics and insights
+- 🎨 **Modern UI** - Built with Radix UI components and Tailwind CSS
+- 🌓 **Dark/Light Mode** - Theme switching with system preference detection
+- 📱 **Responsive Design** - Optimized for all device sizes
+- ⚡ **Performance** - Optimized with Next.js 15 App Router and server components
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org) with App Router
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom animations
+- **UI Components**: [Radix UI](https://www.radix-ui.com/) primitives
+- **Database**: [Supabase](https://supabase.com/) with SSR support
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Animation**: [Motion](https://motion.dev/)
+- **Development**: ESLint, PostCSS, and TypeScript compiler
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.x or later
+- npm, yarn, pnpm, or bun package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd stackmatch-dashboard
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+Configure your Supabase credentials and other environment variables.
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
@@ -14,23 +67,99 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── auth/              # Authentication pages
+│   ├── dashboard/         # Main dashboard
+│   ├── environments/      # Environment management
+│   ├── profile/           # User profile pages
+│   ├── analytics/         # Analytics dashboard
+│   └── settings/          # Application settings
+├── components/            # Reusable React components
+│   ├── ui/               # UI primitives (Radix-based)
+│   ├── magicui/          # Custom UI components
+│   └── docs/             # Documentation components
+└── lib/                  # Utility libraries
+    ├── supabase/         # Supabase client configuration
+    └── utils.ts          # Utility functions
+```
 
-## Learn More
+## 🎯 Key Features
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
+- Secure user authentication with Supabase
+- Profile completion flow
+- Password reset functionality
+- Session management with SSR support
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Dashboard
+- Interactive dashboard with real-time data
+- Environment overview and management
+- User analytics and insights
+- Responsive card-based layout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Environment Management
+- Create and configure development environments
+- Environment comparison tools
+- Public and private environment listings
+- Environment editing and version control
 
-## Deploy on Vercel
+### User Experience
+- Smooth animations and transitions
+- Loading states and progress indicators
+- Toast notifications for user feedback
+- Accessible design with keyboard navigation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔧 Available Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint for code quality
+
+## 🌐 Deployment
+
+### Vercel (Recommended)
+
+The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new):
+
+1. Push your code to a Git repository
+2. Import your project on Vercel
+3. Configure environment variables
+4. Deploy!
+
+### Other Platforms
+
+This application can be deployed on any platform that supports Node.js:
+
+- **Netlify**: Build command `npm run build`, publish directory `out`
+- **Railway**: Automatic deployment from Git
+- **Docker**: Use the provided Dockerfile (if available)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the terms specified in the LICENSE file.
+
+## 🆘 Support
+
+For support and questions:
+- Check the documentation in the `/src/components/docs` directory
+- Review the code examples in the components
+- Open an issue for bug reports or feature requests
+
+---
+
+Built with ❤️ using Next.js and modern web technologies.
